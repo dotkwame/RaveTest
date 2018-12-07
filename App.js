@@ -1,32 +1,41 @@
 import React from 'react';
 import {Button, StyleSheet, View} from 'react-native';
-import {createStackNavigator, createAppContainer} from "react-navigation";
-import PayInvoice from './src/MakePaymentScreen';
+import Rave from 'react-native-rave';
 
-class App extends React.Component {
+export default class App extends React.Component {
+
+  onSuccess = (data) => {
+    console.log("PayInvoice: success", data);
+
+  };
+
+  onFailure = (data) => {
+    console.log("PayInvoice: error", data);
+  };
+
   render() {
-    return (
-      <View style={styles.container}>
-        <Button
-          title="Make Payment"
-          onPress={() => this.props.navigation.navigate("Pay")}/>
-      </View>
-    );
+    return (<Rave
+      amount="10"
+      country="GH"
+      currency="GHS"
+      email="test@mail.com"
+      firstname="Oluwole"
+      lastname="Adebiyi"
+      publickey="FLWPUBK-**************************-X"
+      secretkey="FLWSECK-**************************-X"
+      paymenttype="both"
+      page="mobilemoneygh"
+      meta={[
+      {
+        metaname: "color",
+        metavalue: "red"
+      }, {
+        metaname: "storelocation",
+        metavalue: "ikeja"
+      }
+    ]}
+      production={false}
+      onSuccess={res => this.onSuccess(res)}
+      onFailure={e => this.onFailure(e)}/>);
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-});
-
-const AppNavigator = createStackNavigator({
-  Home: App,
-  Pay: PayInvoice
-}, {initialRouteName: "Home"});
-
-export default createAppContainer(AppNavigator);
